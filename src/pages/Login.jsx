@@ -1,15 +1,9 @@
 import React, { useState, useContext } from "react";
 import api from "../api/axios.js";
-import Logo from "../assets/Logo.png";
+import Logo from "../assets/logo.png";
 // import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Alert,
-  Snackbar,
-  CircularProgress,
-  IconButton,
-  InputAdornment,
-} from "@mui/material";
+import { Alert, Snackbar, CircularProgress } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function Login() {
@@ -56,17 +50,16 @@ export default function Login() {
         navigate("/dashboard");
       }, 1200);
     } catch (err) {
-      showToast(
-        err.response?.data?.message || "Invalid credentials. Please try again.",
-        "error",
-      );
+      const errMsg =
+        err.response?.data?.message || "Connection error. Please try again.";
+      showToast(errMsg, "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-[#0f172a] flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="bg-[#fafbf6] flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
@@ -85,25 +78,21 @@ export default function Login() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="flex justify-center">
-          <img
-            alt="FinTrack Logo"
-            // src={Logo}
-            className="h-32 w-auto object-contain"
-          />
+          <img alt="NovaBooks Logo" src={Logo} className="h-30 w-50" />
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-white">
-          Sign in to FinTrack
+        <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-[#234165]">
+          Sign in to NovaBooks
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-400">
+        <p className="mt-2 text-center text-sm text-[#234165]/70">
           Enter your details to access your dashboard
         </p>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 p-8 rounded-3xl shadow-2xl">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-200">
+              <label className="block text-sm font-semibold text-[#234165]">
                 Email Address
               </label>
               <div className="mt-2">
@@ -116,13 +105,13 @@ export default function Login() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="name@company.com"
-                  className="block w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-gray-500 transition-all focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none disabled:opacity-50"
+                  className="block w-full rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 text-[#234165] placeholder-gray-400 transition-all focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none disabled:opacity-50"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-200">
+              <label className="block text-sm font-semibold text-[#234165]">
                 Password
               </label>
               <div className="mt-2 relative">
@@ -135,12 +124,12 @@ export default function Login() {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="block w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-gray-500 transition-all focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none disabled:opacity-50"
+                  className="block w-full rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 text-[#234165] placeholder-gray-400 transition-all focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none disabled:opacity-50"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#234165] transition-colors"
                 >
                   {showPassword ? (
                     <VisibilityOff fontSize="small" />
@@ -155,7 +144,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative flex w-full justify-center items-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-bold text-white shadow-lg hover:bg-indigo-500 active:scale-95 transition-all disabled:bg-indigo-800 disabled:cursor-not-allowed"
+                className="cursor-pointer group relative flex w-full justify-center items-center rounded-xl bg-[#234165] px-4 py-3 text-sm font-bold text-white shadow-lg hover:bg-[#1a314d] active:scale-[0.98] transition-all disabled:bg-[#234165]/50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <CircularProgress size={20} color="inherit" />
@@ -166,12 +155,12 @@ export default function Login() {
             </div>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-white/10 text-center">
-            <p className="text-sm text-gray-400">
-              New to FinTrack?{" "}
+          <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+            <p className="text-sm font-medium text-[#234165]">
+              New to NovaBooks?{" "}
               <Link
                 to="/register"
-                className="font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+                className="font-bold text-indigo-600 hover:text-indigo-500 transition-colors"
               >
                 Create an account
               </Link>
