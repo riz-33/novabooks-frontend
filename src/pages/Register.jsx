@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-// import api from "../services/api";
-import Logo from "../assets/logo.png";
+import api from "../api/axios.js";
+import Logo from "../assets/logo2.png";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Snackbar, CircularProgress } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -63,7 +63,7 @@ export default function Register() {
   };
 
   return (
-    <div className="bg-[#fafbf6] flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="bg-gray-50 flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
