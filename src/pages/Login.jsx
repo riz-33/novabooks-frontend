@@ -1,10 +1,18 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import api from "../api/axios.js";
 import Logo from "../assets/logo2.png";
-// import { AuthContext } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
 import { Alert, Snackbar, CircularProgress } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+// import { AuthContext } from "../context/AuthContext";
+
+const loginSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Invalid email format"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
 
 export default function Login() {
   //   const { login } = useContext(AuthContext);
@@ -17,41 +25,29 @@ export default function Login() {
     severity: "success",
   });
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
   });
 
   const showToast = (message, severity = "success") => {
     setSnackbar({ open: true, message, severity });
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     setLoading(true);
-
     try {
-      const res = await api.post("/auth/login", formData);
-      // login(res.data);
+      const res = await api.post("/auth/login", data);
       showToast("Welcome back! Redirecting...", "success");
-
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1200);
+      setTimeout(() => navigate("/dashboard"), 1200);
     } catch (err) {
       const errMsg =
-        err.response?.data?.message || "Connection error. Please try again.";
+        err.response?.data?.message ||
+        "Login failed. Please check your credentials.";
       showToast(errMsg, "error");
     } finally {
       setLoading(false);
@@ -63,91 +59,102 @@ export default function Login() {
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <Alert
-          onClose={handleCloseSnackbar}
           severity={snackbar.severity}
           variant="filled"
-          sx={{ width: "100%", borderRadius: 2, fontWeight: "600" }}
+          sx={{ width: "100%", borderRadius: "12px" }}
         >
           {snackbar.message}
         </Alert>
       </Snackbar>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <div className="flex justify-center">
-          <img alt="NovaBooks Logo" src={Logo} className="h-30 w-50" />
-        </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-[#1e3a8a]">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
+        <img alt="NovaBooks" src={Logo} className="mx-auto h-30 w-50 mb-4" />
+        <h2 className="text-3xl font-extrabold tracking-tight text-[#1e3a8a]">
           Sign in to NovaBooks
         </h2>
-        <p className="mt-2 text-center text-sm text-[#d4af37]/70">
+        <p className="mt-2 text-sm font-medium text-[#d4af37]">
           Enter your details to access your dashboard
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-white p-8 rounded-[2rem] shadow-2xl border border-gray-100">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
-              <label className="block text-sm font-semibold text-[#1e3a8a]">
+              <label className="block text-sm font-bold text-[#1e3a8a] mb-1.5 ml-1">
                 Email Address
               </label>
               <div className="mt-2">
                 <input
-                  id="email"
-                  name="email"
+                  {...register("email")}
                   type="email"
-                  required
                   disabled={loading}
-                  value={formData.email}
-                  onChange={handleChange}
                   placeholder="name@company.com"
-                  className="block w-full rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 text-[#1e3a8a] placeholder-gray-400 transition-all focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none disabled:opacity-50"
+                  className={`block w-full rounded-2xl border px-4 py-3 text-[#1e3a8a] transition-all outline-none focus:ring-2 focus:ring-[#1e3a8a] ${
+                    errors.email
+                      ? "border-red-500 bg-red-50"
+                      : "border-gray-200 bg-gray-50"
+                  }`}
                 />
+                {errors.email && (
+                  <p className="mt-1 ml-1 text-xs font-bold text-red-500">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-[#1e3a8a]">
-                Password
-              </label>
-              <div className="mt-2 relative">
+              <div className="flex justify-between items-center mb-1.5 ml-1">
+                <label className="text-sm font-bold text-[#1e3a8a]">
+                  Password
+                </label>
+                <Link
+                  to="/forgot"
+                  className="text-xs font-bold text-[#d4af37] hover:underline"
+                >
+                  Forgot?
+                </Link>
+              </div>
+              <div className="relative">
                 <input
-                  id="password"
-                  name="password"
+                  {...register("password")}
                   type={showPassword ? "text" : "password"}
-                  required
                   disabled={loading}
-                  value={formData.password}
-                  onChange={handleChange}
+                  className={`block w-full rounded-2xl border px-4 py-3 text-[#1e3a8a] transition-all outline-none focus:ring-2 focus:ring-[#1e3a8a] ${
+                    errors.password
+                      ? "border-red-500 bg-red-50"
+                      : "border-gray-200 bg-gray-50"
+                  }`}
                   placeholder="••••••••"
-                  className="block w-full rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 text-[#1e3a8a] placeholder-gray-400 transition-all focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none disabled:opacity-50"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#1e3a8a] transition-colors"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-[#1e3a8a]"
                 >
-                  {showPassword ? (
-                    <VisibilityOff fontSize="small" />
-                  ) : (
-                    <Visibility fontSize="small" />
-                  )}
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
                 </button>
               </div>
+              {errors.password && (
+                <p className="mt-1 ml-1 text-xs font-bold text-red-500">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             <div className="pt-2">
               <button
                 type="submit"
                 disabled={loading}
-                className="cursor-pointer group relative flex w-full justify-center items-center rounded-xl bg-[#1e3a8a] px-4 py-3 text-sm font-bold text-white shadow-lg hover:bg-[#152c6d] active:scale-[0.98] transition-all disabled:bg-[#1e3a8a]/50 disabled:cursor-not-allowed"
+                className="cursor-pointer w-full flex justify-center items-center rounded-2xl bg-[#1e3a8a] px-4 py-4 text-sm font-black text-white shadow-xl hover:bg-[#152c6d] active:scale-[0.97] transition-all disabled:opacity-50"
               >
                 {loading ? (
-                  <CircularProgress size={20} color="inherit" />
+                  <CircularProgress size={24} color="inherit" />
                 ) : (
                   "Sign In to Dashboard"
                 )}
@@ -156,13 +163,13 @@ export default function Login() {
           </form>
 
           <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-            <p className="text-sm font-medium text-[#d4af37]">
-              New to NovaBooks?{" "}
+            <p className="text-sm font-medium text-gray-500">
+              Need an account?{" "}
               <Link
                 to="/register"
-                className="font-bold text-indigo-600 hover:text-indigo-500 transition-colors"
+                className="font-bold text-[#d4af37] hover:text-[#b08d2b] transition-colors"
               >
-                Create an account
+                Join NovaBooks
               </Link>
             </p>
           </div>
