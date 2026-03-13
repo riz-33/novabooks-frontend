@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,7 +7,7 @@ import api from "../api/axios.js";
 import Logo from "../assets/logo2.png";
 import { Alert, Snackbar, CircularProgress } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-// import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
@@ -15,7 +15,7 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
-  //   const { login } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +42,7 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await api.post("/auth/login", data);
+      login(res.data);
       showToast("Welcome back! Redirecting...", "success");
       setTimeout(() => navigate("/dashboard"), 1200);
     } catch (err) {
@@ -73,10 +74,10 @@ export default function Login() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
         <img alt="NovaBooks" src={Logo} className="mx-auto h-30 w-50 mb-4" />
-        <h2 className="text-3xl font-extrabold tracking-tight text-[#1e3a8a]">
+        <h2 className="text-3xl font-extrabold tracking-tight text-novaNavy">
           Sign in to NovaBooks
         </h2>
-        <p className="mt-2 text-sm font-medium text-[#d4af37]">
+        <p className="mt-2 text-sm font-medium text-novaGold">
           Enter your details to access your dashboard
         </p>
       </div>
@@ -85,7 +86,7 @@ export default function Login() {
         <div className="bg-white p-8 rounded-[2rem] shadow-2xl border border-gray-100">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
-              <label className="block text-sm font-bold text-[#1e3a8a] mb-1.5 ml-1">
+              <label className="block text-sm font-bold text-novaNavy mb-1.5 ml-1">
                 Email Address
               </label>
               <div className="mt-2">
@@ -94,7 +95,7 @@ export default function Login() {
                   type="email"
                   disabled={loading}
                   placeholder="name@company.com"
-                  className={`block w-full rounded-2xl border px-4 py-3 text-[#1e3a8a] transition-all outline-none focus:ring-2 focus:ring-[#1e3a8a] ${
+                  className={`block w-full rounded-2xl border px-4 py-3 text-novaNavy transition-all outline-none focus:ring-2 focus:ring-novaNavy ${
                     errors.email
                       ? "border-red-500 bg-red-50"
                       : "border-gray-200 bg-gray-50"
@@ -110,12 +111,12 @@ export default function Login() {
 
             <div>
               <div className="flex justify-between items-center mb-1.5 ml-1">
-                <label className="text-sm font-bold text-[#1e3a8a]">
+                <label className="text-sm font-bold text-novaNavy">
                   Password
                 </label>
                 <Link
                   to="/forgot"
-                  className="text-xs font-bold text-[#d4af37] hover:underline"
+                  className="text-xs font-bold text-novaGold hover:underline"
                 >
                   Forgot?
                 </Link>
@@ -125,7 +126,7 @@ export default function Login() {
                   {...register("password")}
                   type={showPassword ? "text" : "password"}
                   disabled={loading}
-                  className={`block w-full rounded-2xl border px-4 py-3 text-[#1e3a8a] transition-all outline-none focus:ring-2 focus:ring-[#1e3a8a] ${
+                  className={`block w-full rounded-2xl border px-4 py-3 text-novaNavy transition-all outline-none focus:ring-2 focus:ring-novaNavy ${
                     errors.password
                       ? "border-red-500 bg-red-50"
                       : "border-gray-200 bg-gray-50"
@@ -135,7 +136,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-[#1e3a8a]"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-novaNavy"
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </button>
@@ -151,7 +152,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="cursor-pointer w-full flex justify-center items-center rounded-2xl bg-[#1e3a8a] px-4 py-4 text-sm font-black text-white shadow-xl hover:bg-[#152c6d] active:scale-[0.97] transition-all disabled:opacity-50"
+                className="cursor-pointer w-full flex justify-center items-center rounded-2xl bg-novaNavy px-4 py-4 text-sm font-black text-white shadow-xl hover:bg-[#152c6d] active:scale-[0.97] transition-all disabled:opacity-50"
               >
                 {loading ? (
                   <CircularProgress size={24} color="inherit" />
@@ -167,7 +168,7 @@ export default function Login() {
               Need an account?{" "}
               <Link
                 to="/register"
-                className="font-bold text-[#d4af37] hover:text-[#b08d2b] transition-colors"
+                className="font-bold text-novaGold hover:text-novaGoldDark transition-colors"
               >
                 Join NovaBooks
               </Link>

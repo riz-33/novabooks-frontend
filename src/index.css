@@ -2,6 +2,8 @@
 
 @import "tailwindcss";
 
+@config "../tailwind.config.js";
+
 * {
   font-family: "Outfit", sans-serif;
 }
