@@ -2,8 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import Accounts from "./pages/Accounts";
-import Transactions from "./pages/Transactions";
+import { AppLayout } from "./layout/AppLayout";
+// import Accounts from "./pages/Accounts";
+// import Transactions from "./pages/Transactions";
 
 function App() {
   return (
@@ -11,9 +12,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/accounts" element={<Accounts />} />
-        <Route path="/transactions" element={<Transactions />} />
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="/accounts" element={<Accounts />} />
+          <Route path="/transactions" element={<Transactions />} /> */}
+        </Route>
       </Routes>
     </BrowserRouter>
   );
