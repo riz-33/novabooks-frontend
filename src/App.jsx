@@ -3,7 +3,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { AppLayout } from "./layout/AppLayout";
-// import Accounts from "./pages/Accounts";
+import Accounts from "./pages/Accounts";
+import Settings from "./pages/Settings";
+import Ledger from "./pages/Ledger";
+import Reports from "./pages/Reports";
+import ProfitLoss from "./pages/ProfitLoss";
 // import Transactions from "./pages/Transactions";
 
 function App() {
@@ -14,8 +18,13 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/accounts" element={<Accounts />} />
-          <Route path="/transactions" element={<Transactions />} /> */}
+          <Route path="/accounts" element={<Accounts />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/ledger" element={<Ledger />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/pnl" element={<ProfitLoss />} />
+
+          {/* <Route path="/transactions" element={<Transactions />} /> */}
         </Route>
       </Routes>
     </BrowserRouter>
