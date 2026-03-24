@@ -1,11 +1,13 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  Briefcase,
-  FileText,
   LayoutDashboard,
-  LogOut,
-  Settings,
+  FileText,
   Wallet,
+  TrendingUp,
+  Scale,
+  Settings,
+  LogOut,
+  Briefcase,
 } from "lucide-react";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
@@ -28,19 +30,12 @@ export default function Sidebar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="w-20 border-r border-gray-100 bg-white flex flex-col items-center py-8 gap-4 shadow-sm h-full">
+    <nav className="w-20 border-r border-gray-100 bg-white flex flex-col items-center py-8 gap-2 shadow-sm h-full ">
       <SidebarIcon
         to="/dashboard"
         icon={<LayoutDashboard size={24} />}
         active={isActive("/dashboard")}
         label="Dashboard"
-      />
-
-      <SidebarIcon
-        to="/ledger"
-        icon={<FileText size={24} />}
-        active={isActive("/ledger")}
-        label="Ledger"
       />
 
       <SidebarIcon
@@ -51,13 +46,29 @@ export default function Sidebar() {
       />
 
       <SidebarIcon
-        to="/profile"
-        icon={<Briefcase size={24} />}
-        active={isActive("/profile")}
-        label="Business Profile"
+        to="/ledger"
+        icon={<FileText size={24} />}
+        active={isActive("/ledger")}
+        label="Ledger"
       />
 
-      <div className="mt-auto flex flex-col items-center gap-4">
+      <div className="w-8 h-[1px] bg-gray-100 my-4"></div>
+
+      <SidebarIcon
+        to="/pnl"
+        icon={<TrendingUp size={24} />}
+        active={isActive("/pnl")}
+        label="Profit & Loss"
+      />
+
+      <SidebarIcon
+        to="/reports"
+        icon={<Scale size={24} />}
+        active={isActive("/reports")}
+        label="Balance Sheet"
+      />
+
+      <div className="mt-auto flex flex-col items-center ">
         <SidebarIcon
           to="/settings"
           icon={<Settings size={24} />}
@@ -66,17 +77,13 @@ export default function Sidebar() {
         />
 
         <button
-          // to="/logout"
           title="Logout"
           onClick={handleLogout}
           disabled={loading}
           className="cursor-pointer p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all"
         >
           {loading ? (
-            <CircularProgress
-              size={20}
-              color="inherit"
-            />
+            <CircularProgress size={20} color="inherit" />
           ) : (
             <LogOut size={24} />
           )}
@@ -91,18 +98,16 @@ function SidebarIcon({ to, icon, active, label }) {
     <Link
       to={to}
       title={label}
-      className={`p-2 rounded-2xl transition-all duration-300 group ${
+      className={`p-2 rounded-2xl transition-all duration-300 group  ${
         active
           ? "bg-novaNavy text-white shadow-lg shadow-novaNavy/20 scale-110"
           : "text-gray-400 hover:text-novaNavy hover:bg-gray-50"
       }`}
     >
-      <div className="relative">
-        {icon}
-        {active && (
-          <span className="absolute -top-1 -right-1 w-2 h-2 bg-novaGold rounded-full border-2 border-novaNavy" />
-        )}
-      </div>
+      {icon}
+      {active && (
+        <span className="absolute -right-1 top-1/2 -translate-y-1/2 w-1 h-4 bg-novaGold rounded-full" />
+      )}
     </Link>
   );
 }

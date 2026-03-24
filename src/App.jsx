@@ -19,10 +19,10 @@ function App() {
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/accounts" element={<Accounts />} />
-          <Route path="/settings" element={<Settings />} />
           <Route path="/ledger" element={<Ledger />} />
-          <Route path="/reports" element={<Reports />} />
           <Route path="/pnl" element={<ProfitLoss />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/settings" element={<Settings />} />
 
           {/* <Route path="/transactions" element={<Transactions />} /> */}
         </Route>
